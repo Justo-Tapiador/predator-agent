@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PREDATOR – Deep Agentic AI Dashboard</title>
+<style>
+  :root {
+    --bg:       #0a0c10;
+    --panel:    #0f1218;
+    --border:   #1e2535;
+    --accent:   #c0392b;
+    --accent2:  #e74c3c;
+    --blue:     #2980b9;
+    --green:    #27ae60;
+    --yellow:   #f39c12;
+    --gray:     #5d6d7e;
+    --text:     #d0d8e4;
+    --text2:    #8899aa;
+    --font:     'Courier New', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 13px; }
+
+  header {
+    background: linear-gradient(135deg, #1a0505 0%, #0f1218 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { color: var(--accent2); font-size: 20px; font-weight: bold; letter-spacing: 4px; }
+  .subtitle { color: var(--gray); font-size: 10px; letter-spacing: 1px; }
+  .status-pill {
+    padding: 4px 12px; border-radius: 20px; font-size: 11px;
+    border: 1px solid var(--green); color: var(--green);
+    background: rgba(39,174,96,0.08);
+  }
+  .status-pill.training { border-color: var(--yellow); color: var(--yellow); background: rgba(243,156,18,0.08); }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 1px; background: var(--border); height: calc(100vh - 56px); }
+  .col  { background: var(--bg); overflow-y: auto; display: flex; flex-direction: column; gap: 1px; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    margin: 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .panel-header {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--accent2);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .panel-body { padding: 10px 12px; }
+
+  /* Directive input */
+  .directive-row { display: flex; gap: 6px; align-items: flex-start; flex-wrap: wrap; }
+  textarea.directive-input {
+    flex: 1; min-width: 200px;
+    background: #060810; border: 1px solid var(--border); color: var(--text);
+    font-family: var(--font); font-size: 12px;
+    padding: 8px; border-radius: 3px; resize: vertical; min-height: 60px;
+  }
+  textarea.directive-input:focus { outline: none; border-color: var(--accent); }
+
+  .btn {
+    padding: 8px 16px; border: none; border-radius: 3px; cursor: pointer;
+    font-family: var(--font); font-size: 12px; font-weight: bold;
+    transition: all 0.15s;
+  }
+  .btn-red    { background: var(--accent); color: #fff; }
+  .btn-red:hover { background: var(--accent2); }
+  .btn-blue   { background: var(--blue); color: #fff; }
+  .btn-sm     { padding: 4px 10px; font-size: 11px; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  select.sel {
+    background: #060810; border: 1px solid var(--border); color: var(--text);
+    font-family: var(--font); font-size: 12px; padding: 6px;
+    border-radius: 3px;
+  }
+
+  /* Metrics */
+  .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .metric { background: #060810; border-radius: 3px; padding: 8px; }
+  .metric-label { color: var(--text2); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+  .metric-value { font-size: 18px; font-weight: bold; color: var(--text); }
+  .metric-value.green { color: var(--green); }
+  .metric-value.red   { color: var(--accent2); }
+  .metric-value.yellow{ color: var(--yellow); }
+
+  /* Progress bars */
+  .bar-wrap { margin: 6px 0; }
+  .bar-label { display: flex; justify-content: space-between; margin-bottom: 3px; font-size: 10px; color: var(--text2); }
+  .bar-track { height: 6px; background: #1a1f2a; border-radius: 3px; overflow: hidden; }
+  .bar-fill  { height: 100%; border-radius: 3px; transition: width 0.4s; }
+  .bar-green { background: linear-gradient(90deg, var(--green), #2ecc71); }
+  .bar-red   { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .bar-blue  { background: linear-gradient(90deg, var(--blue), #3498db); }
+  .bar-yellow{ background: linear-gradient(90deg, #e67e22, var(--yellow)); }
+
+  /* Event log */
+  .log { font-size: 11px; max-height: 220px; overflow-y: auto; }
+  .log-entry { padding: 3px 0; border-bottom: 1px solid #0f1218; display: flex; gap: 8px; }
+  .log-time  { color: var(--gray); flex-shrink: 0; }
+  .log-type  { flex-shrink: 0; min-width: 80px; }
+  .t-step    { color: var(--blue); }
+  .t-success { color: var(--green); }
+  .t-warn    { color: var(--yellow); }
+  .t-error   { color: var(--accent2); }
+  .t-info    { color: var(--text2); }
+
+  /* Layer status */
+  .layer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .layer-cell {
+    background: #060810; border-radius: 3px; padding: 7px;
+    border-left: 3px solid var(--border); text-align: center;
+  }
+  .layer-cell.active   { border-left-color: var(--green); }
+  .layer-cell.warning  { border-left-color: var(--yellow); }
+  .layer-cell.critical { border-left-color: var(--accent2); }
+  .layer-name { font-size: 9px; color: var(--text2); text-transform: uppercase; }
+  .layer-val  { font-size: 14px; font-weight: bold; }
+
+  /* TPS timeline */
+  #tps-canvas { width: 100%; height: 80px; display: block; }
+
+  /* History table */
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  th { color: var(--text2); text-align: left; padding: 4px 6px;
+       border-bottom: 1px solid var(--border); font-weight: normal; font-size: 10px; text-transform: uppercase; }
+  td { padding: 4px 6px; border-bottom: 1px solid #0a0d12; }
+  tr:hover td { background: #0f1420; }
+  .tag {
+    display: inline-block; padding: 1px 6px; border-radius: 2px; font-size: 10px;
+    background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3);
+  }
+  .tag.fail { background: rgba(192,57,43,0.15); color: var(--accent2); border-color: rgba(192,57,43,0.3); }
+  .tag.crit { background: rgba(243,156,18,0.15); color: var(--yellow); border-color: rgba(243,156,18,0.3); }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">PREDATOR</div>
+    <div class="subtitle">Praxic Reinforcement &amp; Extinction-Driven Agentic Task Orchestrator · Agentic Theory · J. Tapiador García (UA)</div>
+  </div>
+  <div id="status-pill" class="status-pill training">TRAINING…</div>
+</header>
+
+<div class="grid">
+
+  <!-- ── Column 1: Control + Metrics ──────────────────────────────────────── -->
+  <div class="col">
+
+    <div class="panel">
+      <div class="panel-header">Owner Directive Interface</div>
+      <div class="panel-body">
+        <div class="directive-row">
+          <textarea class="directive-input" id="directive-input"
+            placeholder="Enter a natural language task directive…">Debug and fix failing unit tests in the authentication module</textarea>
+        </div>
+        <div class="directive-row" style="margin-top:8px;">
+          <select class="sel" id="priority-sel">
+            <option value="routine">Routine</option>
+            <option value="expedited">Expedited</option>
+            <option value="critical">Critical</option>
+          </select>
+          <input type="number" class="sel" id="token-budget" value="30000" min="1000" step="1000" style="width:100px;" title="Token budget">
+          <button class="btn btn-red" id="run-btn" onclick="runTask()" disabled>▶ EXECUTE</button>
+        </div>
+        <div id="task-status" style="margin-top:8px; font-size:11px; color:var(--text2);"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">System Metrics</div>
+      <div class="panel-body">
+        <div class="metrics-grid">
+          <div class="metric">
+            <div class="metric-label">Output Craving</div>
+            <div class="metric-value green" id="m-craving">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Cascade Risk</div>
+            <div class="metric-value" id="m-cascade">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Steps</div>
+            <div class="metric-value" id="m-steps">0</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Extinctions</div>
+            <div class="metric-value red" id="m-extinct">0</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;">
+          <div class="bar-wrap">
+            <div class="bar-label"><span>Token Budget</span><span id="bar-token-pct">0%</span></div>
+            <div class="bar-track"><div class="bar-fill bar-blue" id="bar-token" style="width:0%"></div></div>
+          </div>
+          <div class="bar-wrap">
+            <div class="bar-label"><span>Energy Budget</span><span id="bar-energy-pct">0%</span></div>
+            <div class="bar-track"><div class="bar-fill bar-yellow" id="bar-energy" style="width:0%"></div></div>
+          </div>
+          <div class="bar-wrap">
+            <div class="bar-label"><span>Task Quality</span><span id="bar-quality-pct">—</span></div>
+            <div class="bar-track"><div class="bar-fill bar-green" id="bar-quality" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">Praxic Stream<span id="tps-phase" style="color:var(--text2);">IDLE</span></div>
+      <div class="panel-body" style="padding:6px;">
+        <canvas id="tps-canvas"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Column 2: Layer status + Event log ───────────────────────────────── -->
+  <div class="col">
+
+    <div class="panel">
+      <div class="panel-header">ANN-Ψ Layer Stack (12 Layers)</div>
+      <div class="panel-body">
+        <div class="layer-grid" id="layer-grid">
+          <!-- populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="flex:1;">
+      <div class="panel-header">
+        Event Log
+        <button class="btn btn-sm" onclick="clearLog()" style="background:none;border:1px solid var(--border);color:var(--text2);">Clear</button>
+      </div>
+      <div class="panel-body" style="padding:6px 10px;">
+        <div class="log" id="event-log"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Column 3: Task history + Inference stats ─────────────────────────── -->
+  <div class="col">
+
+    <div class="panel">
+      <div class="panel-header">Inference Efficiency Analysis</div>
+      <div class="panel-body">
+        <div class="metrics-grid" style="grid-template-columns:repeat(4,1fr);">
+          <div class="metric">
+            <div class="metric-label">Tokens/Step</div>
+            <div class="metric-value" id="eff-tps">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Emit Rate</div>
+            <div class="metric-value" id="eff-emit">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Sat. Steps</div>
+            <div class="metric-value green" id="eff-sat">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Praxis Norm</div>
+            <div class="metric-value" id="eff-pnorm">—</div>
+          </div>
+        </div>
+        <canvas id="efficiency-canvas" style="width:100%;height:100px;display:block;margin-top:10px;"></canvas>
+      </div>
+    </div>
+
+    <div class="panel" style="flex:1;">
+      <div class="panel-header">
+        Task History
+        <span id="history-count" style="color:var(--text2);font-size:10px;">0 tasks</span>
+      </div>
+      <div class="panel-body" style="padding:0; overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Goal</th><th>Priority</th><th>Steps</th><th>Tokens</th><th>Quality</th><th>Result</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── WebSocket ────────────────────────────────────────────────────────────────
+const ws = new WebSocket(`ws://${location.host}`);
+let stepBuf  = [];   // rolling window for TPS canvas
+let effBuf   = [];   // rolling window for efficiency canvas
+let totalSteps = 0, satSteps = 0, emitSteps = 0, extinctions = 0;
+
+ws.onmessage = ({ data }) => {
+  const msg = JSON.parse(data);
+  handleMessage(msg);
+};
+ws.onopen  = () => logEvent('info', 'ws', 'WebSocket connected');
+ws.onclose = () => logEvent('warn', 'ws', 'WebSocket disconnected');
+
+function handleMessage(msg) {
+  switch (msg.type) {
+    case 'ready':
+      document.getElementById('status-pill').textContent = 'READY';
+      document.getElementById('status-pill').classList.remove('training');
+      document.getElementById('run-btn').disabled = false;
+      logEvent('success', 'system', 'PREDATOR training complete – agent ready');
+      break;
+
+    case 'tpsStart':
+      stepBuf = []; effBuf = []; totalSteps = 0; satSteps = 0; emitSteps = 0;
+      document.getElementById('tps-phase').textContent = 'RUNNING';
+      document.getElementById('tps-phase').style.color = 'var(--green)';
+      logEvent('info', 'tpsStart', `Task: ${msg.data?.directive?.goal?.slice(0,40) ?? '…'}`);
+      break;
+
+    case 'tpsStep': {
+      const d = msg.data;
+      totalSteps++;
+      if (d.phase === 'SATURATED') satSteps++;
+      if (d.emitted) emitSteps++;
+
+      // Update metrics
+      setMetric('m-craving',  d.craving?.toFixed(3) ?? '—', d.craving > 0.7 ? 'green' : '');
+      const riskCls = d.cascadeRisk > 0.6 ? 'red' : d.cascadeRisk > 0.3 ? 'yellow' : 'green';
+      setMetric('m-cascade',  d.cascadeRisk?.toFixed(3) ?? '—', riskCls);
+      setMetric('m-steps',    totalSteps);
+      setEffMetric('eff-tps',   d.tokensOut);
+      setEffMetric('eff-emit',  ((emitSteps/totalSteps)*100).toFixed(0)+'%');
+      setEffMetric('eff-sat',   satSteps);
+      setEffMetric('eff-pnorm', d.praxisNorm?.toFixed(2) ?? '—');
+
+      // Budget bars
+      if (d.tokenUsage) {
+        setBar('bar-token',  d.tokenUsage.tokenFraction, 'bar-token-pct');
+        setBar('bar-energy', d.tokenUsage.energyFraction, 'bar-energy-pct');
+      }
+
+      stepBuf.push({ craving: d.craving, cascade: d.cascadeRisk, sat: d.phase==='SATURATED' });
+      if (stepBuf.length > 120) stepBuf.shift();
+      effBuf.push({ tokens: d.tokensOut, norm: d.praxisNorm });
+      if (effBuf.length > 120) effBuf.shift();
+
+      drawTPS();
+      drawEff();
+      break;
+    }
+
+    case 'tpsEnd':
+    case 'taskComplete': {
+      const d = msg.data;
+      document.getElementById('tps-phase').textContent = 'IDLE';
+      document.getElementById('tps-phase').style.color = 'var(--text2)';
+      if (d?.quality !== undefined) {
+        setBar('bar-quality', d.quality, 'bar-quality-pct', true);
+      }
+      logEvent(d?.success ? 'success' : 'warn', 'taskEnd',
+        `Steps:${d?.steps} Quality:${((d?.quality??0)*100).toFixed(1)}%`);
+      if (d) addHistoryRow(d);
+      document.getElementById('run-btn').disabled = false;
+      document.getElementById('task-status').textContent = '';
+      break;
+    }
+
+    case 'extinction':
+      extinctions++;
+      setMetric('m-extinct', extinctions, 'red');
+      logEvent('error', 'extinction', `Unit ${msg.data?.id} – #${msg.data?.extinctions}`);
+      break;
+
+    case 'cascadeIntervention':
+      logEvent('warn', 'cascade', `Intervention: ${msg.data?.type} (ρ=${msg.data?.risk?.toFixed(3)})`);
+      break;
+
+    case 'ownerEscalation':
+      logEvent('error', 'ESCALATION', msg.data?.message ?? 'Owner escalation required');
+      document.getElementById('task-status').textContent = '⚠ Owner escalation – click Resume to continue';
+      break;
+
+    case 'trainingProgress': {
+      const p = msg.data;
+      logEvent('info', `train.${p.phase}`, `${p.stage??''}  epoch ${p.epoch}/${p.epochs}`);
+      break;
+    }
+  }
+}
+
+// ── Task execution ────────────────────────────────────────────────────────────
+async function runTask() {
+  const directive = document.getElementById('directive-input').value.trim();
+  const priority  = document.getElementById('priority-sel').value;
+  const tokens    = parseInt(document.getElementById('token-budget').value);
+  if (!directive) return;
+
+  document.getElementById('run-btn').disabled = true;
+  document.getElementById('task-status').textContent = 'Submitting task…';
+
+  const res = await fetch('/api/task', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ directive, priority, tokens }),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    logEvent('error', 'api', err.error);
+    document.getElementById('run-btn').disabled = false;
+  }
+  document.getElementById('task-status').textContent = 'Running…';
+}
+
+// ── Canvas drawing ─────────────────────────────────────────────────────────────
+function drawTPS() {
+  const canvas = document.getElementById('tps-canvas');
+  const W = canvas.width = canvas.offsetWidth;
+  const H = canvas.height = 80;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  if (stepBuf.length < 2) return;
+
+  const n = stepBuf.length;
+  const dx = W / (n - 1);
+
+  // Cascade risk
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(192,57,43,0.6)';
+  ctx.lineWidth = 1;
+  stepBuf.forEach((s, i) => {
+    const x = i * dx, y = H - s.cascade * H * 0.9;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Craving
+  ctx.beginPath();
+  ctx.strokeStyle = '#27ae60';
+  ctx.lineWidth = 1.5;
+  stepBuf.forEach((s, i) => {
+    const x = i * dx, y = H - s.craving * H * 0.9;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Saturation markers
+  stepBuf.forEach((s, i) => {
+    if (s.sat) {
+      ctx.fillStyle = 'rgba(39,174,96,0.25)';
+      ctx.fillRect(i * dx - 1, 0, 2, H);
+    }
+  });
+}
+
+function drawEff() {
+  const canvas = document.getElementById('efficiency-canvas');
+  const W = canvas.width = canvas.offsetWidth;
+  const H = canvas.height = 100;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  if (effBuf.length < 2) return;
+
+  const maxTokens = Math.max(...effBuf.map(e => e.tokens), 1);
+  const n = effBuf.length, dx = W / (n - 1);
+
+  // Token output bars
+  effBuf.forEach((e, i) => {
+    const h = (e.tokens / maxTokens) * H * 0.8;
+    ctx.fillStyle = 'rgba(41,128,185,0.5)';
+    ctx.fillRect(i * dx - 1, H - h, 2, h);
+  });
+
+  // Praxis norm line
+  const maxNorm = Math.max(...effBuf.map(e => e.norm), 0.01);
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(243,156,18,0.8)';
+  ctx.lineWidth = 1.5;
+  effBuf.forEach((e, i) => {
+    const x = i * dx, y = H - (e.norm / maxNorm) * H * 0.85;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+}
+
+// ── Layer grid ─────────────────────────────────────────────────────────────────
+const LAYERS = [
+  { id:'L1',  label:'L1 Sensory',  type:'hybrid' },
+  { id:'L2',  label:'L2 Encode',   type:'hybrid' },
+  { id:'L3',  label:'L3 K=8',      type:'hetero' },
+  { id:'L4',  label:'L4 Attn',     type:'classical' },
+  { id:'L5',  label:'L5 Attn',     type:'classical' },
+  { id:'L6',  label:'L6 K=16',     type:'hetero' },
+  { id:'L7',  label:'L7 Ctx',      type:'hybrid' },
+  { id:'L8',  label:'L8 Reason',   type:'classical' },
+  { id:'L9',  label:'L9 Reason',   type:'classical' },
+  { id:'L10', label:'L10 K=32',    type:'hetero' },
+  { id:'L11', label:'L11 Prax',    type:'hybrid' },
+  { id:'L12', label:'L12 Out',     type:'output' },
+];
+
+const typeColors = { hybrid:'var(--blue)', hetero:'var(--green)', classical:'var(--text2)', output:'var(--accent2)' };
+
+function buildLayerGrid() {
+  const grid = document.getElementById('layer-grid');
+  grid.innerHTML = LAYERS.map(l => `
+    <div class="layer-cell" id="lc-${l.id}">
+      <div class="layer-name" style="color:${typeColors[l.type]}">${l.label}</div>
+      <div class="layer-val" id="lv-${l.id}">—</div>
+    </div>
+  `).join('');
+}
+buildLayerGrid();
+
+// Poll layer snapshot every 2 s during task
+setInterval(async () => {
+  try {
+    const s = await (await fetch('/api/status')).json();
+    const snap = s.backbone?.layers ?? {};
+    for (const [lid, lsnap] of Object.entries(snap)) {
+      const el = document.getElementById(`lv-${lid}`);
+      if (!el) continue;
+      const risk = lsnap.cascadeRisk ?? 0;
+      el.textContent = risk.toFixed(2);
+      el.style.color = risk > 0.6 ? 'var(--accent2)' : risk > 0.3 ? 'var(--yellow)' : 'var(--green)';
+      const cell = document.getElementById(`lc-${lid}`);
+      if (cell) {
+        cell.className = 'layer-cell ' + (risk > 0.6 ? 'critical' : risk > 0.3 ? 'warning' : 'active');
+      }
+    }
+  } catch (_) {}
+}, 2000);
+
+// ── History table ─────────────────────────────────────────────────────────────
+function addHistoryRow(r) {
+  const tbody = document.getElementById('history-tbody');
+  const pct   = ((r.quality ?? 0) * 100).toFixed(0);
+  const tok   = r.tokenUsage?.tokensUsed?.toLocaleString() ?? '—';
+  const cls   = r.success ? '' : 'fail';
+  const priCls= r.priority === 'critical' ? 'crit' : '';
+  tbody.insertAdjacentHTML('afterbegin', `
+    <tr>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+          title="${r.goal}">${r.goal?.slice(0,35) ?? '—'}</td>
+      <td><span class="tag ${priCls}">${r.priority ?? '—'}</span></td>
+      <td>${r.steps ?? '—'}</td>
+      <td>${tok}</td>
+      <td>${pct}%</td>
+      <td><span class="tag ${cls}">${r.success ? 'OK' : 'FAIL'}</span></td>
+    </tr>
+  `);
+  document.getElementById('history-count').textContent =
+    `${tbody.rows.length} task${tbody.rows.length !== 1 ? 's' : ''}`;
+}
+
+// ── Event log ─────────────────────────────────────────────────────────────────
+function logEvent(level, type, msg) {
+  const log = document.getElementById('event-log');
+  const t   = new Date().toTimeString().slice(0,8);
+  const cls = { success:'t-success', warn:'t-warn', error:'t-error', info:'t-info', step:'t-step' }[level] ?? 't-info';
+  log.insertAdjacentHTML('afterbegin', `
+    <div class="log-entry">
+      <span class="log-time">${t}</span>
+      <span class="log-type ${cls}">${type.padEnd(12)}</span>
+      <span>${msg}</span>
+    </div>
+  `);
+  // Keep at most 200 entries
+  while (log.children.length > 200) log.removeChild(log.lastChild);
+}
+function clearLog() { document.getElementById('event-log').innerHTML = ''; }
+
+// ── Utility helpers ────────────────────────────────────────────────────────────
+function setMetric(id, val, cls='') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = val;
+  if (cls) { el.className = `metric-value ${cls}`; }
+}
+function setEffMetric(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+function setBar(barId, fraction, pctId, percent=false) {
+  const pct = Math.min(100, (fraction * 100)).toFixed(1);
+  const bar = document.getElementById(barId);
+  const lbl = document.getElementById(pctId);
+  if (bar) bar.style.width = pct + '%';
+  if (lbl) lbl.textContent = percent ? pct+'%' : pct+'%';
+}
+</script>
+</body>
+</html>
