@@ -11,7 +11,7 @@
 ---
 
 <div align="center">
-🚨 **WARNING: This Predator Agent needs to be trained in order to function correctly!** 🚨
+🚨<b></b> WARNING: This Predator Agent needs to be trained in order to function correctly! </b>🚨
 <img src="web/public/predator-4.jpg" alt="Train me Please!t"  width="512"/>
 </div>
 ## 📜 Abstract
