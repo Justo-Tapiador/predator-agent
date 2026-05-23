@@ -29,9 +29,9 @@ This project is a direct implementation of the **Agentic Theory** series by **Ju
 *   **Deep Agentic Flow (DAF):** The propagation of stimulus through the hierarchy.
 
 **Primary References:**
-> *   [WALLERMAX-AI 2604.00012](https://github.com/Justo-Tapiador/predator-agent/doc/2604.00012.tex): *Agentic Theory: Definition of the Artificial Junky Neuron.*
-> *   [WALLERMAX-AI 2604.00013](https://github.com/Justo-Tapiador/predator-agent/doc/2604.00014.tex): *Agentic Theory II: The AJN and ANN-Ψ.*
-> *   [WALLERMAX-AI 2604.00014](https://github.com/Justo-Tapiador/predator-agent/doc/2604.00014.tex): *Agentic Theory III: Stimulus Tensor Propagation and TPS.*
+> *   [WALLERMAX-AI 2604.00012](https://github.com/Justo-Tapiador/predator-agent/tree/main/doc/2604.00012.tex): *Agentic Theory: Definition of the Artificial Junky Neuron.*
+> *   [WALLERMAX-AI 2604.00013](https://github.com/Justo-Tapiador/predator-agent/tree/main/doc/2604.00014.tex): *Agentic Theory II: The AJN and ANN-Ψ.*
+> *   [WALLERMAX-AI 2604.00014](https://github.com/Justo-Tapiador/predator-agent/tree/main/doc/2604.00014.tex): *Agentic Theory III: Stimulus Tensor Propagation and TPS.*
 
 ---
 
