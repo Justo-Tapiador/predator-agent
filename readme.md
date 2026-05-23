@@ -31,12 +31,12 @@ This project is a direct implementation of the **Agentic Theory** series by **Ju
 *   **Tensorial Praxic Stream (TPS):** The output stream of actions.
 *   **Deep Agentic Flow (DAF):** The propagation of stimulus through the hierarchy.
 
-**Primary References:**
-> *   [WALLERMAX-AI 2604.00012](https://github.com/Justo-Tapiador/predator-agent/tree/main/doc/2604.00012.tex): *Agentic Theory: Definition of the Artificial Junky Neuron.*
-> *   [WALLERMAX-AI 2604.00013](https://github.com/Justo-Tapiador/predator-agent/tree/main/doc/2604.00013.tex): *Agentic Theory II: The AJN and ANN-Ψ.*
-> *   [WALLERMAX-AI 2604.00014](https://github.com/Justo-Tapiador/predator-agent/tree/main/doc/2604.00014.tex): *Agentic Theory III: Stimulus Tensor Propagation and TPS.*
 
----
+**Primary References:**
+*   [WALLERMAX-AI 2604.00012](https://github.com/Justo-Tapiador/predator-agent/tree/main/doc/2604.00012.tex) [![PDF](https://img.shields.io/badge/PDF-View-red?style=flat-square&logo=adobeacrobatreader&logoColor=white)](https://github.com/Justo-Tapiador/predator-agent/tree/main/doc/2604.00012.pdf): *Agentic Theory: Definition of the Artificial Junky Neuron.*
+*   [WALLERMAX-AI 2604.00013](https://github.com/Justo-Tapiador/predator-agent/tree/main/doc/2604.00013.tex) [![PDF](https://img.shields.io/badge/PDF-View-red?style=flat-square&logo=adobeacrobatreader&logoColor=white)](https://github.com/Justo-Tapiador/predator-agent/tree/main/doc/2604.00013.pdf): *Agentic Theory II: The AJN and ANN-Ψ.*
+*   [WALLERMAX-AI 2604.00014](https://github.com/Justo-Tapiador/predator-agent/tree/main/doc/2604.00014.tex) [![PDF](https://img.shields.io/badge/PDF-View-red?style=flat-square&logo=adobeacrobatreader&logoColor=white)](https://github.com/Justo-Tapiador/predator-agent/tree/main/doc/2604.00014.pdf): *Agentic Theory III: Stimulus Tensor Propagation and TPS.*
+
 
 ## 🚀 Key Features
 
