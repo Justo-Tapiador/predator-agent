@@ -10,7 +10,7 @@
 
 ---
 
-🚨 **WARNING: This Predator Agent is still incomplete - Stay tuned!** 🚨
+🚨 **WARNING: This Predator Agent needs to be trained in order to function correctly!** 🚨
 
 
 ## 📜 Abstract
