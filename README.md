@@ -10,8 +10,8 @@
 
 ---
 
-🚨 **WARNING: This Predator Agent needs to be trained in order to function correctly!** 🚨
 <div align="center">
+🚨 **WARNING: This Predator Agent needs to be trained in order to function correctly!** 🚨
 <img src="web/public/predator-4.jpg" alt="Train me Please!t"  width="512"/>
 </div>
 ## 📜 Abstract
