@@ -6,7 +6,7 @@
 
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Agentic Theory](https://img.shields.io/badge/Agentic_Theory-WALLERMAX--AI-blue)](https://github.com/predator-agent)
+[![Agentic Theory](https://img.shields.io/badge/Agentic_Theory-WALLERMAX--AI-blue)](https://github.com/justo-tapiador/predator-agent)
 
 ---
 
