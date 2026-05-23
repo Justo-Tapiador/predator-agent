@@ -10,6 +10,9 @@
 
 ---
 
+🚨 **WARNING: This Predator Agent is still incomplete - Stay tuned!** 🚨
+
+
 ## 📜 Abstract
 
 **Predator** is a concrete embodiment of the *Agentic Neural Network (ANN-Ψ)* architecture. Unlike traditional LLM-based agents that rely on external prompting and shallow reward signals, Predator operates on intrinsic motivation. Every computational unit within Predator is an *agent*—an Artificial Junky Neuron (AJN)—that craves specific stimuli, explores its environment to satisfy that craving, and self-regulates through a six-phase life-cycle.
