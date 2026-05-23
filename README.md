@@ -12,7 +12,7 @@
 
 🚨 **WARNING: This Predator Agent needs to be trained in order to function correctly!** 🚨
 
-<img src="web/public/predator-4.jpg" alt="Train me Please!t" width="512"/>
+<img src="web/public/predator-4.jpg" alt="Train me Please!t" align="center" width="512"/>
 
 ## 📜 Abstract
 
