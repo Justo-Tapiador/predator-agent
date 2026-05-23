@@ -1,0 +1,156 @@
+\documentclass[12pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{lipsum} % Para texto de relleno, si fuera necesario
+
+% Configuración de márgenes
+\geometry{margin=1in}
+
+% Título del artículo
+\title{\textbf{Agentic Theory: Definition of the Artificial Junky Neuron (AJN)}}
+\author{Justo Tapiador García \\ Department of Artificial Intelligence and Neuroscience \\ Universidad de Alicante (UA)}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This paper explores the operational framework of the Artificial Junky Neuron (AJN), a theoretical agent-like unit defined by its capacity to develop a dependency on specific external stimuli. We analyze the algorithmic process by which the AJN structure creates an addiction at the individual unit level. The object of addiction is a complex input tensor (stimulus class) with differentiable characteristics. The AJN executes ``praxes'' (articulated actions) with feedback mechanisms. Initially, these praxes are random due to underdeveloped addiction. Over time, praxic sequences evolve towards a bias that maximizes the intensity of the addictive stimulus class. As the stimulus intensifies, the praxic sequences moderate until saturation (temporary satisfaction) is reached. Subsequently, the activation threshold decreases, restarting the praxic cycle. We demonstrate how successful satisfaction relaxes praxes, while persistent failure intensifies them, inducing chaotic behavior. If failure persists, the addiction intensity decays, and praxes revert to randomness until the addiction dissolves. The praxic sequences are defined as output tensors acting on transducers, which produce real-world effects influencing the AJN's input tensors.
+\end{abstract}
+
+\section{Introduction}
+
+Traditional neural units typically function as passive integrators of weighted inputs followed by a non-linear activation. In contrast, the \textit{Agentic Theory} proposes a shift towards autonomous, goal-oriented microscopic units. This paper introduces the \textbf{Artificial Junky Neuron (AJN)}, a computational model that mimics the biological feedback loops of addiction and reinforcement learning within a single architectural entity.
+
+The AJN is not merely a classifier but an ``actor'' embedded in an environment. It interacts with the world through \textit{praxes} (output tensors) driven by an internal need to consume a specific class of input tensors. The system exhibits a complex life-cycle ranging from random exploration and focused addiction to chaotic frustration and extinction.
+
+\section{Definitions and Formalization}
+
+\subsection{The Tensorial Space of Stimuli}
+Let the environment provide a complex input tensor at time step $t$ denoted as $\mathcal{S}_t \in \mathbb{R}^{N \times M \times \dots}$. This tensor represents the external stimulus. We define the \textit{Stimulus Intensity Function} $I(\mathcal{S}_t)$, which maps the tensor to a scalar value representing the magnitude of the specific characteristic that the AJN is addicted to:
+\[
+\alpha_t = I(\mathcal{S}_t)
+\]
+where $\alpha_t \in [0, 1]$ represents the normalized intensity of the stimulus at time $t$.
+
+\subsection{The Artificial Junky Neuron (AJN)}
+An AJN is defined by a tuple $(\mathcal{M}, \theta, \Omega)$, where:
+\begin{itemize}
+    \item $\mathcal{M}$ is the internal state mechanism governing the ``craving'' or ``addiction level''.
+    \item $\theta$ represents the activation threshold.
+    \item $\Omega$ is the policy generator that produces \textit{praxes}.
+\end{itemize}
+
+\subsection{Praxes and Transducers}
+The AJN interacts with the environment via \textit{praxies}, defined as output tensors $\mathcal{P}_t$. These praxies act upon a set of transducers $\mathcal{T}$ (relays, motors, mechanisms), which transform the computational output into physical changes:
+\[
+\mathcal{S}_{t+1} = \mathcal{E}(\mathcal{T}(\mathcal{P}_t), \mathcal{S}_t)
+\]
+where $\mathcal{E}$ represents the environmental dynamics. The goal of the AJN is to modulate $\mathcal{P}_t$ such that $I(\mathcal{S}_{t+1}) > I(\mathcal{S}_t)$.
+
+\section{Dynamics of the Addictive Cycle}
+
+The behavior of the AJN evolves through distinct phases determined by the history of stimuli reception.
+
+\subsection{Phase 1: Initialization and Random Exploration}
+At $t=0$, the addiction level is low. The internal state lacks a defined bias. The generation of praxies $\mathcal{P}_t$ is governed by a high-entropy distribution:
+\[
+\mathcal{P}_t \sim \mathcal{N}(\mu_0, \Sigma_0) \quad \text{where } \Sigma_0 \text{ is large.}
+\]
+The AJN executes random actions, effectively sampling the environment to detect the target stimulus class.
+
+\subsection{Phase 2: Reinforcement and Bias Development}
+If a praxis $\mathcal{P}_t$ results in a positive variation of the stimulus intensity $\Delta \alpha = \alpha_{t+1} - \alpha_t > 0$, the AJN reinforces this action. The internal model updates the distribution of praxies to reduce entropy and bias the mean towards the successful action:
+\[
+\mu_{t+1} = \mu_t + \eta \cdot \nabla_{\mathcal{P}} \alpha
+\]
+where $\eta$ is the learning rate. As this cycle repeats, the AJN becomes ``addicted'' to specific praxic sequences that reliably generate the stimulus.
+
+\subsection{Phase 3: Saturation and Satisfaction}
+As the input stimulus intensity $\alpha_t$ approaches a saturation limit $\alpha_{max}$, the AJN enters a state of satisfaction. The activation threshold $\theta$ rises effectively inhibiting the output generation. The praxies relax:
+\[
+\mathcal{P}_t \to \mathbf{0} \quad \text{(or minimal maintenance noise)}
+\]
+This corresponds to the temporary satisfaction of the addiction.
+
+\subsection{Phase 4: Withdrawal and Re-activation}
+Over time, due to an internal metabolic decay function (simulating tolerance or clearance), the activation threshold $\theta$ decreases, and the ``craving'' returns. The AJN re-initiates the praxic sequences.
+
+\subsection{Phase 5: Frustration, Chaos, and Intensification}
+Let the system attempt to satisfy the craving. If the AJN fails to generate the expected stimulus ($\Delta \alpha \approx 0$ or $\Delta \alpha < 0$), the system enters a frustration state.
+\begin{itemize}
+    \item \textit{Intensification:} The magnitude of the praxies increases: $\|\mathcal{P}_t\| \leftarrow \|\mathcal{P}_t\| \cdot \gamma$ where $\gamma > 1$.
+    \item \textit{Chaos:} If failure persists, the variance $\Sigma$ of the praxic distribution increases significantly. The AJN attempts chaotic, high-energy configurations of the output tensor in a desperate attempt to locate the stimulus source.
+\end{itemize}
+
+\subsection{Phase 6: Extinction}
+If the chaotic and intensified praxies fail to produce the stimulus over a prolonged period $\tau_{extinction}$, the synaptic weights representing the addiction begin to decay. The system reverts to a high-entropy, random state (Phase 1), effectively ``forgetting'' the addiction. The AJN becomes dormant until a new stimulus pattern is accidentally discovered.
+
+\section{Algorithmic Implementation}
+
+The following pseudocode summarizes the life-cycle of an AJN at each time step $t$:
+
+\begin{algorithm}[H]
+\caption{AJN Processing Cycle}
+\begin{algorithmic}[1]
+\STATE Input: Current Stimulus Tensor $\mathcal{S}_t$ \STATE Compute Intensity: $\alpha_t \leftarrow I(\mathcal{S}_t)$ \IF{$\alpha_t > \theta_{sat}$}
+    \STATE \textbf{State: Satisfied.}
+    \STATE Output: $\mathcal{P}_t \leftarrow \mathbf{0}$ (Relax praxes).
+    \STATE Decay threshold $\theta$ slowly.
+\ELSE
+    \STATE \textbf{State: Craving.}
+    \IF{History of Success}
+        \STATE Generate $\mathcal{P}_t$ based on refined bias $\mu_{t}$ (Low Entropy).
+    \ELSEIF{Recent Failure}
+        \STATE Generate $\mathcal{P}_t$ with increased variance and magnitude (Intensification).
+        \IF{Failure persists $> \tau_{extinction}$}
+            \STATE Reset internal model to random high entropy.
+        \ENDIF
+    \ENDIF
+\ENDIF
+\STATE Output: Praxis Tensor $\mathcal{P}_t$ to Transducers.
+\STATE \textbf{Feedback Loop:} Observe $\mathcal{S}_{t+1}$.
+\end{algorithmic}
+\end{algorithm}
+
+\section{Discussion}
+
+The Artificial Junky Neuron presents a radical departure from static connectionist models. By defining a unit whose internal state is driven by a cyclical addiction-satiation loop, we introduce a model of intrinsic motivation at the microscopic level.
+
+The interplay between the \textit{input tensor} (the object of desire) and the \textit{output tensor} (the praxis) mediated by physical \textit{transducers} closes the loop between computation and reality. The emergence of chaotic praxies during withdrawal phases is particularly notable, as it mirrors biological behaviors observed in withdrawal syndromes and provides a mechanism for escape from local optima in problem-solving.
+
+\section{Conclusion}
+
+We have defined the Artificial Junky Neuron (AJN) as an agentic unit capable of developing specific addictions to complex input tensor classes. Through a feedback mechanism involving praxes and transducers, the AJN self-regulates its behavior from random exploration to focused action, and subsequently to relaxation or chaotic frustration depending on environmental feedback. This model offers a new framework for understanding adaptive agency in artificial systems.
+
+\section*{Acknowledgments}
+The author acknowledges the theoretical framework provided by the study of agentic systems and neural feedback loops.
+
+\begin{thebibliography}{9}
+
+\bibitem{shannon1948}
+Shannon, C. E. (1948).
+A Mathematical Theory of Communication.
+\textit{Bell System Technical Journal}.
+
+\bibitem{skinner1938}
+Skinner, B. F. (1938).
+\textit{The Behavior of Organisms}.
+Copley Publishing Group.
+
+\bibitem{hebb1949}
+Hebb, D. O. (1949).
+\textit{The Organization of Behavior}.
+Wiley \& Sons.
+
+\end{thebibliography}
+
+\end{document}
