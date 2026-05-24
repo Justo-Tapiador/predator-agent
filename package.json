@@ -1,6 +1,6 @@
 {
   "name": "predator-agent",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "PREDATOR – Praxic Reinforcement and Extinction-Driven Agentic Task Orchestrator and Realizer. A Deep Agentic AI system built on the Artificial Junky Neuron (AJN) framework by Justo Tapiador García (UA).",
   "main": "src/index.js",
   "type": "module",
