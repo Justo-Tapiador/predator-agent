@@ -78,7 +78,7 @@ Translates Owner Directives $D = (G, C, B, \pi)$ into addiction targets.
 
 #### 2. Token-Energy Arbitrator (TEA)
 Controls the emission rate $r_{emit}$ based on the output neuron's craving $M^{(12)}$:
-$$ r_{emit}(t) = r_0 \cdot \exp(-\kappa_E \cdot \frac{E_{used}}{E_{budget}}) \cdot (1 + \kappa_M \cdot M^{(12)}(t)) $$
+$$r_{emit}(t) = r_0 \cdot \exp(-\kappa_E \cdot \frac{E_{used}}{E_{budget}}) \cdot (1 + \kappa_M \cdot M^{(12)}(t))$$
 
 #### 3. Praxic Stream Executor (PSE)
 Receives praxis tensors $P_t$, validates them against constraints, and dispatches them to environment transducers (APIs, Tools, Filesystem).
@@ -163,7 +163,7 @@ Predator is designed for long-horizon tasks where efficiency is paramount.
 ### Token Consumption Model
 Unlike LLMs that regenerate the full context window ($O(n)$ tokens/step), Predator's emission $T_{out}(t)$ is tied to the praxis norm:
 
-$$ T_{out}(t) = \lfloor \| P^{(12)}_t \|_F \cdot \kappa_T \rfloor $$
+$$T_{out}(t) = \lfloor \| P^{(12)}_t \|_F \cdot \kappa_T \rfloor$$
 
 *   **Saturation Phase:** $P_t \to 0$, $T_{out} \approx 0$. (Agent is satisfied, quiet).
 *   **Frustration Phase:** High variance $\Sigma$, $T_{out}$ increases. (Agent is searching hard).
