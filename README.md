@@ -11,9 +11,14 @@
 ---
 
 <div align="center">
-🚨<b>WARNING: This Predator Agent needs to be trained in order to function correctly! </b>🚨
-<img src="https://raw.githubusercontent.com/justo-tapiador/predator-agent/main/web/public/predator-4.jpg" alt="Train me Please!t"  width="512"/>
+<div style="font-size:16pt;text-align:center;line-height:16pt;margin-bottom:8px;color:#ff4d04;">🚨<b>WARNING: This Predator Agent needs <br> to be trained in order to function correctly! </b>🚨
 </div>
+<img src="https://raw.githubusercontent.com/justo-tapiador/predator-agent/main/web/public/predator-4.jpg" alt="Train me Please!t"  width="512"/>
+<div  style="font-size:16pt;text-align:center;line-height:16pt;color:#ff4d04;">
+🚨<b>WARNING: The current implementation of <br> this Predator Agent is a <i>proof-of-concept</i>, <br> not a production-ready system </b>🚨
+</div>
+</div>
+
 ## 📜 Abstract
 
 **Predator** is a concrete embodiment of the *Agentic Neural Network (ANN-Ψ)* architecture. Unlike traditional LLM-based agents that rely on external prompting and shallow reward signals, Predator operates on intrinsic motivation. Every computational unit within Predator is an *agent*—an Artificial Junky Neuron (AJN)—that craves specific stimuli, explores its environment to satisfy that craving, and self-regulates through a six-phase life-cycle.
